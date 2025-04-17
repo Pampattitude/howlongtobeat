@@ -1,13 +1,12 @@
-const axios: any = require('axios');
-const UserAgent: any = require('user-agents');
-const cheerio: any = require('cheerio')
-
+const axios: any = require("axios");
+const UserAgent: any = require("user-agents");
+const cheerio: any = require("cheerio");
 
 /**
  * Takes care about the http connection and response handling
  */
 export class HltbSearch {
-  public static BASE_URL: string = 'https://howlongtobeat.com/';
+  public static BASE_URL: string = "https://howlongtobeat.com/";
   public static DETAIL_URL: string = `${HltbSearch.BASE_URL}game?id=`;
   public static SEARCH_URL: string = `${HltbSearch.BASE_URL}api/ouch/`;
   public static IMAGE_URL: string = `${HltbSearch.BASE_URL}games/`;
@@ -18,65 +17,70 @@ export class HltbSearch {
     /"\/api\/ouch\/".concat\("([a-zA-Z0-9]+)"\).concat\("([a-zA-Z0-9]+)"\)/g;
 
   payload: any = {
-    "searchType": "games",
-    "searchTerms": [""],
-    "searchPage": 1,
-    "size": 20,
-    "searchOptions": {
-      "games": {
-        "userId": 0,
-        "platform": "",
-        "sortCategory": "popular",
-        "rangeCategory": "main",
-        "rangeTime": {
-          "min": null,
-          "max": null
+    searchType: "games",
+    searchTerms: [""],
+    searchPage: 1,
+    size: 20,
+    searchOptions: {
+      games: {
+        userId: 0,
+        platform: "",
+        sortCategory: "popular",
+        rangeCategory: "main",
+        rangeTime: {
+          min: null,
+          max: null,
         },
-        "gameplay": {
-          "perspective": "",
-          "flow": "",
-          "genre": "",
-          "difficulty": ""
+        gameplay: {
+          perspective: "",
+          flow: "",
+          genre: "",
+          difficulty: "",
         },
-        "rangeYear": {
-          "min": "",
-          "max": ""
+        rangeYear: {
+          min: "",
+          max: "",
         },
-        "modifier": ""
+        modifier: "",
       },
-      "users": {
-        "sortCategory": "postcount"
+      users: {
+        sortCategory: "postcount",
       },
-      "lists": {
-        "sortCategory": "follows"
+      lists: {
+        sortCategory: "follows",
       },
-      "filter": "",
-      "sort": 0,
-      "randomizer": 0,
-      "useCache": true
-    }
-  }
+      filter: "",
+      sort: 0,
+      randomizer: 0,
+      useCache: true,
+    },
+  };
 
   async detailHtml(gameId: string, signal?: AbortSignal): Promise<string> {
     try {
-      let result =
-        await axios.get(`${HltbSearch.DETAIL_URL}${gameId}`, {
+      let result = await axios
+        .get(`${HltbSearch.DETAIL_URL}${gameId}`, {
           headers: {
-            'User-Agent': new UserAgent().toString(),
-            'origin': 'https://howlongtobeat.com',
-            'referer': 'https://howlongtobeat.com'
+            "User-Agent": new UserAgent().toString(),
+            origin: "https://howlongtobeat.com",
+            referer: "https://howlongtobeat.com",
           },
           timeout: 20000,
           signal,
-        }).catch(e => { throw e; });
+        })
+        .catch((e) => {
+          throw e;
+        });
       return result.data;
     } catch (error) {
-      if (error) {
-        throw new Error(error);
-      } else if (error.response.status !== 200) {
-        throw new Error(`Got non-200 status code from howlongtobeat.com [${error.response.status}]
+      if (error.response.status !== 200) {
+        throw new Error(`Got non-200 status code from howlongtobeat.com [${
+          error.response.status
+        }]
           ${JSON.stringify(error.response)}
         `);
+      } else {
+        throw new Error(error);
       }
     }
   }
@@ -95,10 +99,10 @@ export class HltbSearch {
       let result = await axios.post(searchUrlWithKey, search, {
         headers: {
           "User-Agent": new UserAgent().toString(),
-          'Accept': '*/*',
+          Accept: "*/*",
           "Content-Type": "application/json",
-          "Origin": "https://howlongtobeat.com",
-          "Referer": `https://howlongtobeat.com/`,
+          Origin: "https://howlongtobeat.com",
+          Referer: `https://howlongtobeat.com/`,
         },
         timeout: 20000,
         signal,
@@ -108,8 +112,9 @@ export class HltbSearch {
       if (error) {
         throw new Error(error);
       } else if (error.response.status !== 200) {
-        throw new Error(`Got non-200 status code from howlongtobeat.com [${error.response.status
-          }]
+        throw new Error(`Got non-200 status code from howlongtobeat.com [${
+          error.response.status
+        }]
               ${JSON.stringify(error.response)}
             `);
       }
@@ -150,9 +155,9 @@ export class HltbSearch {
 
         const scriptText = res.data;
         const matches = [...scriptText.matchAll(HltbSearch.SEARCH_KEY_PATTERN)];
-        const firstKey: string = matches[0][1]
-        const secondKey: string = matches[0][2]
-        return firstKey.concat(secondKey)
+        const firstKey: string = matches[0][1];
+        const secondKey: string = matches[0][2];
+        return firstKey.concat(secondKey);
       } catch (error) {
         continue;
       }

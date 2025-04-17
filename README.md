@@ -23,17 +23,17 @@ npm install howlongtobeat --save
 
 #### Add imports
 
-* javascript
+- javascript
 
 ```javascript
-let hltb = require('howlongtobeat');
+let hltb = require("howlongtobeat");
 let hltbService = new hltb.HowLongToBeatService();
 ```
 
-* typescript
+- typescript
 
 ```typescript
-import { HowLongToBeatService, HowLongToBeatEntry } from 'howlongtobeat';
+import { HowLongToBeatService, HowLongToBeatEntry } from "howlongtobeat";
 
 let hltbService = new HowLongToBeatService();
 ```
@@ -41,12 +41,12 @@ let hltbService = new HowLongToBeatService();
 #### Searching for a game
 
 ```javascript
-hltbService.search('Nioh').then(result => console.log(result));
+hltbService.search("Nioh").then((result) => console.log(result));
 ```
 
 `search()` will return a `Promise` with an `Array<HowLongToBeatEntry>`
 
-* Search response example:
+- Search response example:
 
 ```javascript
 [ {
@@ -78,12 +78,15 @@ hltbService.search('Nioh').then(result => console.log(result));
 #### Getting details for a game
 
 ```javascript
-hltbService.detail('36936').then(result => console.log(result)).catch(e => console.error(e));
+hltbService
+  .detail("36936")
+  .then((result) => console.log(result))
+  .catch((e) => console.error(e));
 ```
 
 The `detail()` method will return a `Promise` with an `HowLongToBeatEntry`. If the id is not known, an error is thrown, you should catch the Promise anyway.
 
-* Detail response example:
+- Detail response example:
 
 ```javascript
 {
@@ -106,13 +109,13 @@ The `detail()` method will return a `Promise` with an `HowLongToBeatEntry`. If t
 
 HLTB has 7 differents ways to count games hours, here they are:
 
-* Main Story
-* Main + Extras
-* Completionist
-* Single-Player
-* Solo
-* Co-Op
-* Vs.
+- Main Story
+- Main + Extras
+- Completionist
+- Single-Player
+- Solo
+- Co-Op
+- Vs.
 
 Use the `timeLabels` attribute for mapping purposes
 
@@ -120,7 +123,7 @@ Use the `timeLabels` attribute for mapping purposes
 
 ### Missing features
 
-* Error and Exception handling is almost not present, must be improved
+- Error and Exception handling is almost not present, must be improved
 
 ## License
 

@@ -4,7 +4,7 @@ Build is enabled on travis-ci.org.
 
 A build is automatically triggered on push.
 
-When doing a 
+When doing a
 
     npm version patch ### or corresponding version
 

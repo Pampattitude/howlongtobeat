@@ -32,7 +32,6 @@ bower_components
 # Users Environment Variables
 .lock-wscript
 
-
 #exclude the apikey file
 apikey.js
 
