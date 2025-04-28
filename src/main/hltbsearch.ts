@@ -110,13 +110,15 @@ export class HltbSearch {
       return result.data;
     } catch (error) {
       if (error) {
+        if (error.response && error.response.status !== 200) {
+          throw new Error(`Got non-200 status code from howlongtobeat.com [${
+            error.response.status
+          }]
+                ${JSON.stringify(error.response)}
+              `);
+        }
+        
         throw new Error(error);
-      } else if (error.response.status !== 200) {
-        throw new Error(`Got non-200 status code from howlongtobeat.com [${
-          error.response.status
-        }]
-              ${JSON.stringify(error.response)}
-            `);
       }
     }
   }
