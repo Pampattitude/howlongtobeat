@@ -114,9 +114,7 @@ class HltbSearch {
             catch (error) {
                 if (error) {
                     if (error.response && error.response.status !== 200) {
-                        throw new Error(`Got non-200 status code from howlongtobeat.com [${error.response.status}]
-                ${JSON.stringify(error.response)}
-              `);
+                        throw new Error(`Got non-200 status code from howlongtobeat.com [${error.response.status}]`);
                     }
                     throw new Error(error);
                 }
@@ -135,6 +133,7 @@ class HltbSearch {
             const html = res.data;
             const $ = cheerio.load(html);
             const scripts = $("script[src]");
+            const errors = [];
             for (const el of scripts) {
                 const src = $(el).attr("src");
                 if (!src.includes("_app-")) {
@@ -156,8 +155,12 @@ class HltbSearch {
                     return firstKey.concat(secondKey);
                 }
                 catch (error) {
+                    errors.push(error);
                     continue;
                 }
+            }
+            if (errors.length) {
+                console.error(`hltb: ${JSON.stringify(errors.map(err => err.message))}`);
             }
             throw new Error("Could not find search key");
         });
@@ -166,7 +169,7 @@ class HltbSearch {
 exports.HltbSearch = HltbSearch;
 HltbSearch.BASE_URL = "https://howlongtobeat.com/";
 HltbSearch.DETAIL_URL = `${HltbSearch.BASE_URL}game?id=`;
-HltbSearch.SEARCH_URL = `${HltbSearch.BASE_URL}api/ouch/`;
+HltbSearch.SEARCH_URL = `${HltbSearch.BASE_URL}api/seek/`;
 HltbSearch.IMAGE_URL = `${HltbSearch.BASE_URL}games/`;
-HltbSearch.SEARCH_KEY_PATTERN = /"\/api\/ouch\/".concat\("([a-zA-Z0-9]+)"\).concat\("([a-zA-Z0-9]+)"\)/g;
+HltbSearch.SEARCH_KEY_PATTERN = /"\/api\/seek\/".concat\("([a-zA-Z0-9]+)"\).concat\("([a-zA-Z0-9]+)"\)/g;
 //# sourceMappingURL=hltbsearch.js.map

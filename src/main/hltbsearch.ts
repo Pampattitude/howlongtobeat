@@ -8,13 +8,13 @@ const cheerio: any = require("cheerio");
 export class HltbSearch {
   public static BASE_URL: string = "https://howlongtobeat.com/";
   public static DETAIL_URL: string = `${HltbSearch.BASE_URL}game?id=`;
-  public static SEARCH_URL: string = `${HltbSearch.BASE_URL}api/ouch/`;
+  public static SEARCH_URL: string = `${HltbSearch.BASE_URL}api/seek/`;
   public static IMAGE_URL: string = `${HltbSearch.BASE_URL}games/`;
 
   private searchKey: string;
 
   private static readonly SEARCH_KEY_PATTERN =
-    /"\/api\/ouch\/".concat\("([a-zA-Z0-9]+)"\).concat\("([a-zA-Z0-9]+)"\)/g;
+    /"\/api\/seek\/".concat\("([a-zA-Z0-9]+)"\).concat\("([a-zA-Z0-9]+)"\)/g;
 
   payload: any = {
     searchType: "games",
@@ -113,9 +113,7 @@ export class HltbSearch {
         if (error.response && error.response.status !== 200) {
           throw new Error(`Got non-200 status code from howlongtobeat.com [${
             error.response.status
-          }]
-                ${JSON.stringify(error.response)}
-              `);
+          }]`);
         }
         
         throw new Error(error);
@@ -137,6 +135,7 @@ export class HltbSearch {
 
     const scripts = $("script[src]");
 
+    const errors: Error[] = [];
     for (const el of scripts) {
       const src = $(el).attr("src") as string;
 
@@ -161,8 +160,13 @@ export class HltbSearch {
         const secondKey: string = matches[0][2];
         return firstKey.concat(secondKey);
       } catch (error) {
+        errors.push(error);
         continue;
       }
+    }
+
+    if (errors.length) {
+      console.error(`hltb: ${JSON.stringify(errors.map(err => err.message))}`);
     }
 
     throw new Error("Could not find search key");
